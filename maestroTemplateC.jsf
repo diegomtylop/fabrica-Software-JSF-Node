@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<div xmlns:p="http://primefaces.org/ui"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets" 
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+   
+    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+   
+    <h1>${msg['{{titulokey}}']}</h1>
+    <div>
+        {{#confiltros}}
+        <!--Filtros-->
+        <div id="filtros" class="container">
+            <div class="row">
+            <!--Formuulario de los filtros-->
+            <h:form>
+                <h:panelGrid columns="2">
+                    {{!Iteras sobre los filtros}}
+                    {{#filtros}}
+                    <strong>{{nombre}}</strong>
+                    <h:selectOneMenu styleClass="form-control">
+                        <f:selectItem itemLabel="Por favor seleccione una opción"/>
+                    </h:selectOneMenu>
+                    {{/filtros}}
+                </h:panelGrid>
+                
+                <p:commandButton value="Consultar" type="button" action="${ {{nombreBB}}.consultar }"/>
+            </h:form>
+            </div>
+        </div>
+        
+        <hr/>
+        {{/confiltros}}
+        
+        <div id="tablaRegistros">
+            <!--Fomrulario de la tabla-->
+            <h:form>
+            <div>
+                 <p:commandButton value="${msg['general.agregar']}" 
+                                     icon="ui-icon-plusthick"
+                                     process="@this"
+                                     update=":dialogEdit"
+                                     actionListener="${ {{nombreBB}}.agregarAction}" />
+                                     
+                {{#eliminable}}
+                <p:commandButton value="Eliminar" type="button" onclick="PF('dlgElim').show();" />
+                {{/eliminable}}
+                {{#btnAdicionales}}
+                <p:commandButton value="${msg['{{labelkey}}']}" type="button"/>
+                {{/btnAdicionales}}
+                
+                <p:commandButton value="Volver" type="button"/>
+            </div>
+            
+            <!--Contenedor de la tabla-->
+            <div>
+            
+                <p:dataTable id="tablaRegistros" var="registro" value="#{ {{nombreBB}}.lista }" 
+                         height="110" widgetVar="wDataTable"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,30,50"
+                         paginator="true" rows="10" emptyMessage="${msg['general.noRegistros']}">
+                         
+                    <p:column headerText="${msg['opciones.lbl']}" >
+                        <p:commandButton
+                                id="btnEditar"
+                                update=":dialogEdit"
+                                title="${msg['general.editar']}"
+                                icon="ui-icon-pencil"
+                                process="@this"
+                                oncomplete="PF('dlgEdicion').show()">  
+                                 <f:setPropertyActionListener value="${registro}" target="#{ {{nombreBB}}.selected }" />  
+                        </p:commandButton> 
+                            
+                        {{#eliminable}}
+                        <p:commandButton
+                                id="btnEliminar"
+                                update=":dialogElim"
+                                title="${msg['general.eliminar']}"
+                                icon="ui-icon ui-icon-trash"
+                                process="@this"
+                                oncomplete="PF('dlgElim').show()">  
+                                 <f:setPropertyActionListener value="${registro}" target="#{ {{nombreBB}}.selected }" />  
+                            </p:commandButton> 
+                        {{/eliminable}}
+                    </p:column>
+                {{#columnas}}
+                    <p:column headerText="${msg['{{labelkey}}']}" >
+                        <h:outputText value="#{ registro.{{propiedad}} }"/>
+                    </p:column>
+                {{/columnas}}
+                </p:dataTable>
+            </div>
+            </h:form>
+        </div>
+        
+        <!--Pop up de edición-->
+        <div>
+            <p:dialog widgetVar="dlgEdicion" id="dialogEdit">
+                <!--formulario de ingreso-->
+                
+                
+                <h:form>
+                    <h:panelGrid columns="2">
+                    {{#columnas}}
+                        <strong>${msg['{{labelkey}}']}</strong>
+                        <h:inputText value="#{ {{nombreBB}}.selected.{{propiedad}} }"/>
+                        
+                    {{/columnas}}
+                    </h:panelGrid>
+                    <div>
+                        <p:commandButton value="Guardar" type="button" oncomplete="PF('dlgEdicion').hide();" />
+                        <p:commandButton value="Cancelar" type="button" onclick="PF('dlgEdicion').hide();" />
+                    </div>
+                </h:form>
+            </p:dialog>
+        </div>
+        {{#eliminable}}
+        <!--Confirmación de eliminación-->
+        <div>
+            <p:dialog widgetVar="dlgElim" id="dialogElim">
+                ¿Está seguro  que desea eliminar el registro selecionado?
+                ${ {{nombreBB}}.selected }
+                
+                <div>
+                    <p:commandButton value="Eliminar" type="button" oncomplete="PF('dlgElim').hide();" />
+                    <p:commandButton value="Cancelar" type="button" onclick="PF('dlgElim').hide();" />
+                </div>
+            </p:dialog>
+        </div>
+        {{/eliminable}}
+    </div>
+</div>

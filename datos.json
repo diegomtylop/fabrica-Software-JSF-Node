@@ -1,0 +1,19 @@
+{
+"directorio":"administracion/",
+"nombrePag":"admonContenidos",
+"titulokey":"admonSistMetro.titulo",
+"nombreBB":"moduloBB",
+"confiltros":true,
+"filtros": [{ "nombre": "Tipo de programa cursaro" },
+    { "nombre": "Programa académico cursado" },
+    { "nombre": "Linea de énfasis aprobada" }],
+"eliminable":true,
+"btnAdicionales":[{"labelkey":"cambiarestado.lbl"},
+    {"labelkey":"opc.lbl"}],
+"columnas":[
+    {"labelkey":"prog.ac.cur.lbl","propiedad":"progAcad"},
+    {"labelkey":"lin.enf.lbl","propiedad":"linea"},
+    {"labelkey":"prog.aca.des.lbl","propiedad":"progDest"},
+    {"labelkey":"estado.lbl","propiedad":"estado"}
+]
+}
