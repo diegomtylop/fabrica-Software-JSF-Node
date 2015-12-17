@@ -1,0 +1,19 @@
+{
+  "name": "Fabrica",
+  "version": "1.0.0",
+  "description": "Prueba de concepto",
+  "main": "selectFile.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Diego Montoya",
+  "window": {
+    "toolbar": true,
+    "width": 800,
+    "height": 500
+  },
+  "license": "ISC",
+  "dependencies": {
+    "pretty-bytes": "^1.0.2"
+  }
+}

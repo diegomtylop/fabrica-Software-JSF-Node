@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Configuración</title>
+        <meta charset="utf-8"/>
+        <script src="bean-utils-2.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+        
+        <script src="js/core.js"></script> <!-- JS de la aplicación -->
+        <script src="js/services/handleBarsService.js"></script> <!-- angular services -->
+        <script src="js/controllers/templateCtrl.js"></script> <!-- angular controller -->
+        
+        
+	</head>
+	<body ng-app="fabricaApp">
+        <h1>Configuración</h1>
+        
+        <!--Información de debug-->
+        
+        <form ng-controller="templateCtrl">
+            <fieldset>
+            <div class="form-group">
+                <label for="">Nombre de la entidad</label>
+                <input type="text" class="form-control" id="directorio" ng-model="config.entityName" placeholder="Directorio" readonly>
+            </div>
+            <div class="form-group">
+                <label for="">Nombre del objeto</label>
+                <input type="text" class="form-control" id="directorio" ng-model="config.objectName" placeholder="Nombre del objeto" readonly>
+            </div>
+                
+            <div class="form-group">
+                <label for="">Nombre de la aplicación</label>
+                <input type="text" class="form-control" id="directorio" ng-model="config.appName" placeholder="Nombre de la aplicación">
+                <span>
+                    co.edu.eafit.{{config.appName}}
+                </span>
+            </div>
+                
+            <div class="form-group">
+                <label for="">Directorio salida</label>
+                <input type="text" class="form-control" id="directorio" ng-model="config.directorio" placeholder="Directorio">
+            </div>
+            
+            <div class="form-group">
+                <label for="">Nombre de la página</label>
+                <input type="text" class="form-control" id="nombrePag" ng-model="config.nombrePag" placeholder="Nombre de la página">
+            </div>
+            
+            <div class="form-group">
+                <label for="">Título de la página</label>
+                <input type="text" class="form-control" id="titulokey" ng-model="config.titulokey" placeholder="Título de la página">
+            </div>
+            
+            <div class="form-group">
+                <label for="">Nombre del Managed Bean</label>
+                <input type="text" class="form-control" id="nombreBB" ng-model="config.nombreBB" placeholder="Nombre">
+            </div>
+            
+            <div class="form-group">
+                <label for="">Debe tener filtros</label>
+                <select ng-model="config.conFiltros">
+                    <option value="true">Si</option>
+                    <option value="">No</option>
+                </select>
+            </div>
+                
+            <div class="form-group">
+                <label for="">Se pueden eliminar registros</label>
+                <select ng-model="config.eliminable">
+                    <option value="true">Si</option>
+                    <option value="">No</option>
+                </select>
+            </div>
+                
+            <div class="form-group">
+                <label for="">Se pueden editar registros</label>
+                <select ng-model="config.editable">
+                    <option value="true">Si</option>
+                    <option value="">No</option>
+                </select>
+            </div>
+                
+            <div class="form-group">
+                <label for="">Se pueden ver el detalle de los</label>
+                <select ng-model="config.verDetalles">
+                    <option value="true">Si</option>
+                    <option value="">No</option>
+                </select>
+            </div>
+            </fieldset>
+                
+            <div>
+                <h1>Propiedades de la entidad</h1>
+                <div id="propiedades">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Mostrar como columna
+                                </th>
+                                <th>
+                                    Tipo de dato
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th>
+                                    Requerido
+                                </th>
+                                <th>
+                                    Título de la columna
+                                </th>
+                                <th ng-show="config.conFiltros">
+                                    Incluir como filtro
+                                </th>
+                                <th>
+                                    Ordenable
+                                </th>
+                                <th>
+                                    Filtrable
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="fila" ng-repeat="prop in propiedades ">
+                                <td>
+                                    <input type="checkbox" ng-model="prop.tabla" ng-click="changeColumnas()"/>
+                                </td>
+                                <td>
+                                    {{prop.tipoDato}}
+                                </td>
+                                <td>
+                                {{prop.propiedad}}
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-model="prop.requerido"/>
+                                </</td>
+                                <td>
+                                    <input type="text" ng-model="prop.labelkey" ng-show="prop.tabla"/>
+                                </td>
+                                <td ng-show="config.conFiltros">
+                                    <input type="checkbox" ng-model="prop.filtro" 
+                                           ng-show="config.conFiltros"/>
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-model="prop.ordenable" ng-show="prop.tabla"/>
+                                </td>
+                                <td>
+                                    <input type="checkbox" ng-model="prop.filtrable" ng-show="prop.tabla"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="debug">
+                        {{config}}
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <button ng-click="guardar()">Guardar</button>
+            </div>
+        </form>
+	</body>
+</html>

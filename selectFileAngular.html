@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Seleccione el archivo</title>
+        <meta charset="utf-8"/>
+        <script src="bean-utils-2.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+        
+        <script src="js/core.js"></script> <!-- JS de la aplicación -->
+        <script src="js/services/handleBarsService.js"></script> <!-- angular services -->
+        <script src="js/services/configService.js"></script> <!-- angular services -->
+        <script src="js/controllers/fileCtrl.js"></script> <!-- angular controller -->
+        <script src="bean-utils-2.js"></script>
+        <link rel="stylesheet" href="css/bootstrap-3.3.6-dist/css/bootstrap.min.css"><link>
+	</head>
+	<body ng-app="fabricaApp">
+		<p>Seleccione el archivo de la entidad Java para el cual desea generar el código:</p>
+        <form action="config.html" ng-controller="fileCtrl">
+            <div class="form-group">
+                <label for="">Archivo de la entidad (.java)</label>
+                <input type="file" id="fileinput" name="archivo" title="Debe ser un archivo con extensión .java que represente un Bean con getters y setters"
+                       ng-model="config.inputEntity"/>{{config.inputEntity}}...
+            </div>
+            
+            <!--INICIALMENTE SE PENSABA HACER CONFIGURABLE, PERO DESPUES NO-->
+            <div class="form-group" style="display:none">
+                <label for="">Directorio de salida</label>
+                <input type="text" id="dirSalida"/>{{config.dirTemp}}
+            </div>
+            <div class="form-group">
+                <input type="button" value="Siguiente" id="btnGuardar" ng-click="guardar()"/>
+            </div>
+            <div id="listaProp">
+
+            </div>
+            
+            <pre id="debug">
+            </pre>
+
+        </form>
+        
+        <script type="text/javascript">
+            
+            var NOMBRE_CLASE;
+            var PROPIEDADES;
+          function readSingleFile(evt) {
+            //Retrieve the first (and only!) File from the FileList object
+            var f = evt.target.files[0]; 
+            debugger;
+            //var f = document.getElementById('fileinput').files[0];
+
+            if (f) {
+              var r = new FileReader();
+              r.onload = function(e) { 
+                  var contents = e.target.result;
+               /* alert( "Got the file.n" 
+                      +"name: " + f.name + "n"
+                      +"type: " + f.type + "n"
+                      +"size: " + f.size + " bytesn"
+                      + "starts with: " + contents.substr(1, contents.indexOf("n"))
+                      +"contenido completo "+contents
+                );  */
+                  
+                  //Obtienen la lista de propiedeades de leer el archivo
+                  PROPIEDADES = obtenerPropiedades(contents,false);
+                  
+                  var contenedor = $('#listaProp');
+                  contenedor.html('');
+                  PROPIEDADES.forEach( function(prop){
+                    contenedor.append( '<p>'+prop.tipoDato+' '+prop.propiedad+'</p>' );
+                  });
+                  
+                  console.log('hola');
+                  alert('Archivo cargado: '+f.name);
+                  
+                  var nombreFile = f.name;
+                  NOMBRE_CLASE = nombreFile.substr(0,nombreFile.indexOf('.'));
+                  
+              }
+              r.readAsText(f);
+            } else { 
+              alert("Failed to load file");
+            }
+          }
+
+        document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
+        </script>
+        
+        <script>
+            var fs = require('fs');
+            
+            //Función que almacena el archivo con las propiedades de la clase
+            function guardarInfoBean(carpetaSalida, nombre, contenido ){
+                archivoSalida = nombre + '.json';
+                alert('guardar '+archivoSalida+' en la carpeta'+carpetaSalida)
+                
+                debugger;
+                //Si no existe la carpeta la crea
+                if (!fs.existsSync(carpetaSalida)){
+                    fs.mkdirSync(carpetaSalida);
+                }
+                
+                fs.writeFile( './'+carpetaSalida+'/'+archivoSalida, JSON.stringify(contenido), function (err) {
+                    if (err){ console.log('Error guardando el archivo'+err);throw err};
+                    console.log('El resultado fue fuardado en temp/'+archivoSalida);
+                });
+            }
+            
+            document.getElementById('btnGuardar').addEventListener('click', function(){
+                //Guarda las propiedades del archivo
+                alert('guardar');
+                
+                //var carpetaSalida = document.getElementById('dirSalida').value;
+                var carpetaSalida = 'temp';
+                
+                if( carpetaSalida ){
+                    guardarInfoBean(carpetaSalida, NOMBRE_CLASE, PROPIEDADES );    
+                    //Dirige a la pantalla de configuración
+                    //TODO: VER COMO SE PUEDE HACER MEJOR LA NAVEGACIÓN
+                    //window.history.pushState('Object', 'Title', '/config.html');
+                    window.location.href = 'config.html?entityName='+NOMBRE_CLASE;
+                }else{
+                    alert('Debe seleccionar el directorio de salida');   
+                }
+            });
+            
+        </script>
+        
+        
+	</body>
+</html>

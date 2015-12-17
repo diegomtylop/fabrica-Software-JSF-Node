@@ -1,0 +1,12 @@
+Flujo:
+
+El usuario selecciona la clase (ARchivo.java) que desea generar.
+
+El sistema extrae los getter y setter de la clase.
+
+El usuario ingresa los parametros de configuración 
+
+
+TRABAJO ACTUAL/PENDIENTE
+
+SEGUIR HACIENDO LOS TEMPLATES DE LAS CLASES JAVA
